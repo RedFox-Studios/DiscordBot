@@ -72,4 +72,4 @@ npm init -y
 npm install discord.js dotenv
 ```
 
-This creates `package.json` with your dependencies (which acts like `requirements.txt` in Python). Let me know if you need help setting that up!
+This creates `package.json` with your dependencies (which acts like `requirements.txt` in Python).
