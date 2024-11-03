@@ -1,0 +1,5 @@
+{
+    "token": "BOT_TOKEN",
+    "prefix": "!",
+    "clientId": "CLIENT_ID"
+  }
