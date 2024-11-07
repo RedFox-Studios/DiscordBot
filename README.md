@@ -94,12 +94,14 @@ Edit `config.json` to customize the bot's behavior:
   "cooldowns": {
     "general": 3,
     "moderation": 5,
-    "fun": 2
+    "fun": 2,
+    "utility": 3
   },
   "permissions": {
     "general": "SEND_MESSAGES",
     "moderation": "MODERATE_MEMBERS",
-    "fun": "SEND_MESSAGES"
+    "fun": "SEND_MESSAGES",
+    "utility": "SEND_MESSAGES"
   }
 }
 ```
