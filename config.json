@@ -1,5 +1,22 @@
 {
-    "token": "BOT_TOKEN",
-    "prefix": "!",
-    "clientId": "CLIENT_ID"
+  "token": "YOUR_BOT_TOKEN",
+  "clientId": "YOUR_CLIENT_ID",
+  "guildId": "YOUR_GUILD_ID",
+  "logging": {
+    "errors": true,
+    "servers": true,
+    "commands": true
+  },
+  "cooldowns": {
+    "general": 3,
+    "moderation": 5,
+    "fun": 2,
+    "utility": 3
+  },
+  "permissions": {
+    "general": "SEND_MESSAGES",
+    "moderation": "MODERATE_MEMBERS",
+    "fun": "SEND_MESSAGES",
+    "utility": "SEND_MESSAGES"
   }
+}

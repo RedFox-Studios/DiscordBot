@@ -1,75 +1,202 @@
-# DiscordBot
+# Advanced Discord Bot# Advanced Discord Bot
 
-[![GitHub release](https://img.shields.io/github/release/RedFox-Studios/DiscordBot.svg)](https://github.com/RedFox-Studios/DiscordBot/releases)
-[![GitHub issues](https://img.shields.io/github/issues/RedFox-Studios/DiscordBot.svg)](https://github.com/RedFox-Studios/DiscordBot/issues)
-[![GitHub license](https://img.shields.io/github/license/RedFox-Studios/DiscordBot.svg)](./LICENSE)
-
-Welcome to **DiscordBot**, a customizable Discord bot developed by RedFox Studios. Designed to be flexible and efficient, this bot provides an array of commands that enhance your Discord server experience.
+A feature-rich Discord bot with slash commands, error handling, cooldowns, permissions, pagination, and more.
 
 ## Table of Contents
+
 - [Features](#features)
-- [Installation](#installation)
+- [Setup](#setup)
+- [File Structure](#file-structure)
 - [Configuration](#configuration)
-- [Usage](#usage)
+- [Command System](#command-system)
+- [Logging System](#logging-system)
+- [Cooldowns and Permissions](#cooldowns-and-permissions)
+- [Pagination Utility](#pagination-utility)
+- [Adding New Commands](#adding-new-commands)
+- [Deployment](#deployment)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
-- 🛠️ Easily extendable commands
-- ⚙️ Configurable settings via `config.json`
-- 📜 Modular command structure
 
-## Installation
-To set up and run DiscordBot on your local environment, follow these steps:
+- Slash command support
+- Error handling and graceful degradation
+- Cooldown system
+- Permission-based command access
+- Pagination for long responses
+- Interactive help menu
+- Moderation tools
+- Logging system
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/RedFox-Studios/DiscordBot.git
-   cd DiscordBot
-   ```
+## Setup
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+1. Clone the repository
+2. Install dependencies:
 
-3. **Configure the bot:**  
-   Edit `config.json` with your bot token and other configuration details.
+```
+npm install
+```
+3. Copy `config.example.json` to `config.json` and fill in your bot token, client ID, and guild ID3. Copy `config.example.json` to `config.json` and fill in your bot token, client ID, and guild ID
+4. Register slash commands:
 
-4. **Start the bot:**
-   ```bash
-   node index.js
-   ```
+```
+node deploy-commands.js
+```
+
+5. Start the bot:
+
+```
+node index.js
+```
+
+## File Structure
+
+```
+discord-bot/
+│
+├── commands/
+│   ├── fun/
+│   │   └── choose.js
+│   ├── general/
+│   │   └── help.js
+│   └── moderation/
+│       └── kick.js
+│
+├── logs/
+│   ├── errors.log
+│   ├── servers.log
+│   ├── commands.log
+│   └── server_list.log
+│
+├── utils/
+│   └── pagination.js
+│
+├── config.json
+├── deploy-commands.js
+├── index.js
+├── logger.js
+└── README.md
+```
 
 ## Configuration
-Edit the `config.json` file to customize bot settings, including the Discord bot token and command prefixes. Make sure to keep this file secure.
 
-Example `config.json`:
+Edit `config.json` to customize the bot's behavior:
+
 ```json
 {
-    "token": "BOT_TOKEN",
-    "prefix": "!",
-    "clientId": "CLIENT_ID"
+  "token": "YOUR_BOT_TOKEN",
+  "clientId": "YOUR_CLIENT_ID",
+  "guildId": "YOUR_GUILD_ID",
+  "logging": {
+    "errors": true,
+    "servers": true,
+    "commands": true
+  },
+  "cooldowns": {
+    "general": 3,
+    "moderation": 5,
+    "fun": 2
+  },
+  "permissions": {
+    "general": "SEND_MESSAGES",
+    "moderation": "MODERATE_MEMBERS",
+    "fun": "SEND_MESSAGES"
+  }
 }
 ```
 
-## Usage
-The bot comes with a set of pre-configured commands found in the `commands/` directory. You can add or modify commands as needed.
+## Command System
 
-## Contributing
-We welcome contributions! Please fork the repository and create a pull request with your changes. Be sure to follow coding standards and add documentation as necessary.
+Commands are organized into categories (folders) within the `commands/` directory. Each command is a separate file that exports an object with the following structure:
 
-## License
-This project is licensed under the terms of the [MIT License](./LICENSE).
-
----
-
-### requirements.txt
-If it’s a **Node.js bot**, you won’t need `requirements.txt` (that’s for Python). Instead, use `package.json` to list dependencies like `"discord.js"` for Node.js bots. If you don’t have `package.json` yet, run this:
-
-```bash
-npm init -y
-npm install discord.js dotenv
+```javascript
+ module.exports = {module.exports = {
+  category: 'category_name',
+  data: new SlashCommandBuilder()
+    .setName('command_name')
+    .setDescription('Command description'),
+  async execute(interaction) {
+    // Command logic here
+  },
+};
 ```
 
-This creates `package.json` with your dependencies (which acts like `requirements.txt` in Python).
+## Logging System
+
+The bot automatically creates a `logs/` directory with the following log files:
+
+- `errors.log`: Any errors encountered during bot operation
+- `servers.log`: Server join/leave events
+- `commands.log`: Command usage
+- `server_list.log`: Up-to-date list of servers the bot is in
+
+
+Logging can be configured in `config.json`.
+
+## Cooldowns and Permissions
+
+Cooldowns and permissions are defined in `config.json` for each command category. The bot automatically applies these settings to all commands within a category.
+
+## Pagination Utility
+
+The `utils/pagination.js` file provides a utility for paginating long responses. Use it in your commands like this:
+
+```javascript
+ const pagination = require('../../utils/pagination');const pagination = require('../../utils/pagination');
+
+// ... in your command's execute function:
+const pages = [
+  new EmbedBuilder().setDescription('Page 1 content'),
+  new EmbedBuilder().setDescription('Page 2 content'),
+  // ... more pages
+];
+
+pagination(interaction, pages);
+```
+
+## Adding New Commands
+
+1. Create a new file in the appropriate category folder within `commands/`
+2. Use the following template:
+
+
+```javascript
+ const { SlashCommandBuilder } = require('discord.js');const { SlashCommandBuilder } = require('discord.js');
+
+module.exports = {
+  category: 'category_name',
+  data: new SlashCommandBuilder()
+    .setName('command_name')
+    .setDescription('Command description'),
+  async execute(interaction) {
+    // Command logic here
+  },
+};
+
+```
+
+3. Run `node deploy-commands.js` to register the new command with Discord
+
+
+## Deployment
+
+1. Ensure all your changes are committed and pushed to your repository
+2. Set up a hosting platform (e.g., Heroku, DigitalOcean, or a VPS)
+3. Configure environment variables for your bot token and other sensitive information
+4. Deploy your bot to the hosting platform
+5. Ensure the bot starts correctly and can connect to Discord
+
+
+## Contributing
+
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
+
+
+Please ensure your code follows the existing style and includes appropriate documentation.
+
+## License
+
+This project is licensed under the MIT License.
